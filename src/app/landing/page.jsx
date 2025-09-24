@@ -5,7 +5,7 @@ import Image from "next/image";
 const LandingPage = () => {
   return (
     <div className="font-sans text-gray-900">
-      {/* Hero */}
+      {/* Hero  prueva*/}
       <section className="relative min-h-screen flex flex-col justify-center items-center text-center bg-gradient-to-br from-violet-900 via-violet-700 to-violet-600 text-white">
         <div className="relative z-10 px-6">
           <h1 className="text-5xl font-bold mb-4 animate-fade-in-up">
