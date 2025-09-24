@@ -2,7 +2,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/sonner";
 
 import {
   ClerkProvider,
@@ -13,7 +13,6 @@ import {
   UserButton,
   SignOutButton,
 } from "@clerk/nextjs";
-
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,21 +33,18 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
-            <html lang="en">
+      <html lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen animated-gradient text-white`}
         >
           <SidebarProvider>
-              <AppSidebar />
-              <SidebarTrigger />
-              {children}
+            <AppSidebar />
+            <SidebarTrigger />
+            {children}
           </SidebarProvider>
           <Toaster />
         </body>
       </html>
     </ClerkProvider>
-
   );
 }
-
-
