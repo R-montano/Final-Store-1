@@ -1,0 +1,97 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { useCartStore } from "@/store/cart-store"; // Aqui estoy utilizando la ruta de importacion
+;
+
+const ProductDetailPage = ({ params }) => {
+  const { productid } = params;
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const { addProduct } = useCartStore(); // ✅ usamos la función de Zustand
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await axios.get(
+          `https://fakestoreapi.com/products/${productid}`
+        );
+        setProduct(response.data);
+        setError(null);
+      } catch (err) {
+        setError("Error al obtener el producto");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [productid]);
+
+  const handleAddToCart = () => {
+    if (product) {
+      /* console.log("🛒 Carrito actual:", cartItems); */
+      addProduct(product); // ✅ añade el producto al carrito
+    }
+  };
+
+  if (loading) return <p>Cargando...</p>;
+  if (error) return <p>{error}</p>;
+  if (!product) return <p>No se encontró el producto...</p>;
+
+  return (
+    <div className="container mx-auto px-4 py-8 md:px-16">
+      <div className="grid md:grid-cols-2 gap-10 items-start bg-white border border-gray-100 shadow-xl rounded-2xl p-6 md:p-10">
+        {/* Imagen del producto */}
+        <div className="relative w-full h-96 bg-gray-50 rounded-xl overflow-hidden shadow-inner">
+          <Image
+            src={product.image}
+            alt={product.title}
+            fill
+            style={{ objectFit: "contain" }}
+            priority
+          />
+        </div>
+
+        {/* Información del producto */}
+        <div className="flex flex-col gap-4">
+          <h2 className="text-3xl font-extrabold text-teal-800 text-center md:text-left leading-snug">
+            {product.title}
+          </h2>
+
+          <p className="text-xs font-semibold text-teal-700 bg-teal-100 uppercase px-3 py-1 rounded-full w-fit shadow-sm">
+            {product.category}
+          </p>
+
+          <p className="text-2xl font-semibold text-rose-600 text-right">
+            ${product.price}
+          </p>
+
+          <p className="text-sm text-gray-700 leading-relaxed tracking-wide">
+            {product.description}
+          </p>
+
+          <div className="flex items-center justify-start gap-2 text-sm text-gray-600">
+            <span className="bg-gray-100 px-2 py-1 rounded-md">
+              ⭐ {product.rating.rate} ({product.rating.count} opiniones)
+            </span>
+          </div>
+
+          <Button
+            onClick={handleAddToCart}
+            className="mt-4 py-3 text-base rounded-lg bg-teal-600 text-white font-semibold hover:bg-teal-500 transition-colors"
+          >
+            Añadir al carrito
+          </Button> 
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ProductDetailPage;
+
